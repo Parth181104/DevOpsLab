@@ -5,6 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".menu-btn i").classList.toggle("active");
     });
 
-    
+    // This is a comment by Karthik Reddy
 });
 
