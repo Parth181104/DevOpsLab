@@ -182,7 +182,7 @@ h1 {
         totalAmountElement.textContent = '$' + totalPrice.toFixed(2);
     }
 
-    // Function to remove an item from the cart
+    // Remove an item from the cart and update the local storage
     function removeFromCart(index) {
         cart3.splice(index, 1); // Remove item from array
         localStorage.setItem('cart2', JSON.stringify(cart3)); // Update local storage
