@@ -11,7 +11,7 @@ html {
 }
 /*header*/
 .menu-btn {
-    color: #424144;
+    color: #424144; /* created changes*/
     font-size: 23px;
     cursor: pointer;
     display: none;
