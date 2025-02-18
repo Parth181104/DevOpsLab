@@ -32,7 +32,7 @@
             <i class="fab fa-facebook"></i>
         </div>
         <div class="links">
-            <p>Don't have an account yet?</p>
+            <p>Don't have an account yet? Try SignIn</p>
             <a href="regtry.php">Signup</a>
         </div>
     </div>
