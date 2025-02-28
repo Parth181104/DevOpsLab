@@ -56,22 +56,6 @@
             outline: transparent;
             border-bottom: 2px solid hsl(327, 90%, 28%);
         }
-        input::placeholder {
-            color: transparent;
-        }
-        label {
-            color: #757575;
-            position: relative;
-            left: 1.2em;
-            top: -1.3em;
-            cursor: auto;
-            transition: 0.3s ease all;
-        }
-        input:focus~label, input:not(:placeholder-shown)~label {
-            top: -3em;
-            color: hsl(327, 90%, 28%);
-            font-size: 15px;
-        }
         .btn {
             font-size: 1.1rem;
             padding: 8px 0;
@@ -88,28 +72,21 @@
             background: #07001f;
         }
     </style>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+
 <div class="container" id="signup">
     <h1 class="form-title">Register</h1>
-    <form method="post" action="regtry.php">
+    <form method="post" action="">
         <div class="input-group">
             <i class="fas fa-user"></i>
-            <input type="text" name="FirstName" id="FirstName" placeholder="First Name" required>
-            <label for="fName">First Name</label>
+            <input type="text" name="firstName" id="FirstName" placeholder="First Name" required>
+            <label for="FirstName">First Name</label>
         </div>
         <div class="input-group">
             <i class="fas fa-user"></i>
             <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
-            <label for="lName">Last Name</label>
+            <label for="lastName">Last Name</label>
         </div>
         <div class="input-group">
             <i class="fas fa-envelope"></i>
@@ -121,26 +98,47 @@
             <input type="password" name="password" id="password" placeholder="Password" required>
             <label for="password">Password</label>
         </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+            <label for="confirm_password">Confirm Password</label>
+        </div>
         <input type="submit" class="btn" value="Sign Up" name="signUp">
     </form>
-</div>   <!--comment by karthik -->
+</div>
 </body>
 </html>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
-    $firstName = isset($_POST['FirstName']) ? $_POST['FirstName'] : null;
-    $lastName = isset($_POST['lastName']) ? $_POST['lastName'] : null;
-    $email = isset($_POST['email']) ? $_POST['email'] : null;
-    $password = isset($_POST['password']) ? $_POST['password'] : null;
+    // Retrieve form data and sanitize inputs
+    $firstName = htmlspecialchars(trim($_POST['firstName']));
+    $lastName = htmlspecialchars(trim($_POST['lastName']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    // Validate inputs
-    if (empty($FirstName) || empty($lastName) || empty($email) || empty($password)) {
-        die("All fields are required.");
+    // Check if all fields are filled
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password) || empty($confirm_password)) {
+        die("<script>alert('All fields are required.');</script>");
     }
 
-    // Hash the password
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("<script>alert('Invalid email format.');</script>");
+    }
+
+    // Check if passwords match
+    if ($password !== $confirm_password) {
+        die("<script>alert('Passwords do not match.');</script>");
+    }
+
+    // Validate password strength (minimum 8 characters, one uppercase, one number)
+    if (!preg_match("/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/", $password)) {
+        die("<script>alert('Password must be at least 8 characters long, contain one uppercase letter, and one number.');</script>");
+    }
+
+    // Hash the password for security
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
     // Database connection details
@@ -149,34 +147,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pass = "ma@2815@2815";
     $db = "login";
 
-    // Create a database connection
-    $conn = new mysqli($host, $user, $pass, $db);
+    // Secure database connection using PDO
+    try {
+        $conn = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+        // Check if email already exists
+        $checkStmt = $conn->prepare("SELECT email FROM users WHERE email = :email");
+        $checkStmt->bindParam(":email", $email);
+        $checkStmt->execute();
+        if ($checkStmt->rowCount() > 0) {
+            die("<script>alert('Email already registered. Please use a different email.');</script>");
+        }
+
+        // Use a prepared statement to prevent SQL Injection
+        $stmt = $conn->prepare("INSERT INTO users (FirstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)");
+        $stmt->bindParam(":firstName", $firstName);
+        $stmt->bindParam(":lastName", $lastName);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":password", $hashedPassword);
+
+        if ($stmt->execute()) {
+            echo "<script>
+                alert('Registration successful! Thank you for signing up.');
+                window.location.href = 'index.php';
+            </script>";
+        } else {
+            echo "<script>alert('Error: Could not register. Please try again.');</script>";
+        }
+    } catch (PDOException $e) {
+        echo "<script>alert('Database Error: " . $e->getMessage() . "');</script>";
     }
 
-    // Use prepared statement to insert data
-    $stmt = $conn->prepare("INSERT INTO users (FirstName, lastName, email, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $FirstName, $lastName, $email, $hashedPassword);
-
-    if ($stmt->execute()) {
-        // Display a success message and redirect to index.php
-        echo "<script>
-            alert('Registration successful! Thank you for signing up.');
-            window.location.href = 'index.php';
-        </script>";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    // Close statement and connection
-    $stmt->close();
-    $conn->close();
+    // Close connection
+    $conn = null;
 }
 ?>
 
-</head>
-<body>
-       
+</body>
+</html>
