@@ -123,7 +123,7 @@
         </div>
         <input type="submit" class="btn" value="Sign Up" name="signUp">
     </form>
-</div>
+</div>   <!--comment by karthik -->
 </body>
 </html>
 
