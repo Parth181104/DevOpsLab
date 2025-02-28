@@ -84,7 +84,7 @@
     </style>
 </head>
 <body>
-    <!-- Sign In Form -->
+    <!-- Sign In Form -->     <!--// this is comment added by Karthik Reddy-->
     <div class="container" id="signIn">
         <h1 class="form-title">Sign In</h1>
         <form method="post" action="login.php">
@@ -307,5 +307,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 </body>
 </html>
