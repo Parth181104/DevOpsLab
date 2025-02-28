@@ -3,12 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register & Login</title>//This is a comment added by Parth Datar
+    <title>Register & Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 300px;
+        }
+        .form-title {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            color: #999;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 10px 10px 30px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-group label {
+            display: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .or {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .icons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .icons i {
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        .links {
+            text-align: center;
+        }
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-
-
     <!-- Sign In Form -->
     <div class="container" id="signIn">
         <h1 class="form-title">Sign In</h1>
@@ -16,28 +91,25 @@
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
                 <input type="email" name="email" id="email" placeholder="Email" required>
-                <label for="email">Email</label>
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" name="password" id="password" placeholder="Password" required>
-                <label for="password">Password</label>
             </div>
-            
             <input type="submit" class="btn" value="Sign In" name="signIn">
         </form>
-        <p class="or">----------or--------</p>
+        <p class="or">---------- or ----------</p>
         <div class="icons">
             <i class="fab fa-google"></i>
             <i class="fab fa-facebook"></i>
         </div>
         <div class="links">
-            <p>Don't have an account yet? Try SignIn</p>
-            <a href="regtry.php">Signup</a>
+            <p>Don't have an account yet? <a href="regtry.php">Sign Up</a></p>
         </div>
     </div>
+</body>
+</html>
 
-<style>
     * {
         margin: 0;
         padding: 0;
