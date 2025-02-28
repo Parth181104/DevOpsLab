@@ -84,7 +84,7 @@
     </style>
 </head>
 <body>
-    <!-- Sign In Form -->
+    <!-- Sign In Form -->  <!-- tHIS IS COMMENT ADDED BY ANIKET PANGAVHANE --> 
     <div class="container" id="signIn">
         <h1 class="form-title">Sign In</h1>
         <form method="post" action="login.php">
