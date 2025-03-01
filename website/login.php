@@ -65,7 +65,6 @@
     </style>
 </head>
 <body>
-
     <!-- Sign In Form -->
     <div class="container" id="signIn">
         <h1 class="form-title">Sign In</h1>
@@ -102,17 +101,65 @@
         <p class="toggle" id="showSignIn">Already have an account? Sign In</p>
     </div>
 
-    <script>
-        document.getElementById('showSignUp').addEventListener('click', function () {
-            document.getElementById('signIn').classList.add('hidden');
-            document.getElementById('signUp').classList.remove('hidden');
-        });
+<script>
+    const signUpButton = document.getElementById('signUpButton');
+    const signInButton = document.getElementById('signInButton');
+    const signInForm = document.getElementById('signIn');
+    const signUpForm = document.getElementById('signup');
 
-        document.getElementById('showSignIn').addEventListener('click', function () {
-            document.getElementById('signUp').classList.add('hidden');
-            document.getElementById('signIn').classList.remove('hidden');
-        });
-    </script>
+    signUpButton.addEventListener('click', function (event) {
+        event.preventDefault();  // Prevent form submission
+        signInForm.style.display = "none";
+    });
 
+    signInButton.addEventListener('click', function (event) {
+        event.preventDefault();  // Prevent form submission
+        signInForm.style.display = "block";
+    });
+</script>
+<?php 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $firstName = isset($_POST['FirstName']) ? $_POST['FirstName'] : null;
+    $lastName = isset($_POST['lastName']) ? $_POST['lastName'] : null;
+    $email = isset($_POST['email']) ? $_POST['email'] : null;
+    $password = isset($_POST['password']) ? $_POST['password'] : null;
+
+    // Validate inputs
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+    }
+
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Database connection details
+    $host = "localhost";
+    $user = "mahimakela";
+    $pass = "ma@2815@2815";
+    $db = "login";
+
+    // Create a database connection
+    $conn = new mysqli($host, $user, $pass, $db);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Use prepared statement to insert data
+    $stmt = $conn->prepare("INSERT INTO users (FirstName, lastName, email, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $firstName, $lastName, $email, $hashedPassword);
+
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+        echo "<script>alert('All fields are required.'); window.location.href = 'index.php';</script>";
+        exit();
+    }
+    
+    // Close statement and connection
+    $stmt->close();
+    $conn->close();
+}
+?>
 </body>
 </html>
